@@ -20,16 +20,34 @@ SparseMatrix<T, coeff>::SparseMatrix(const size_t size) {
     if (T == CCS) {
         LI.resize(realSize);
         LJ.resize(size + 1);
+        for (size_t val : LI) {
+            val = gen() % (size * size);
+        }
+        std::sort(LI[0], LI[realSize - 1]);
+        int colCounter = -1;
+        uint32_t j = 0;
+        for (uint32_t i = 0; i < realSize; ++i) {
+            if (LI[i] / size > colCounter) {
+                LJ[j] = i;
+                ++colCounter;
+            }
+            LI[i] = LI[i] / size;
+        }
     } else if (T == CRS){
         LJ.resize(realSize);
         LI.resize(size + 1);
+        for (size_t val : LJ) {
+            val = gen() % (size * size);
+        }
+        std::sort(LJ[0], LJ[realSize - 1]);
+        int rowCounter = -1;
+        uint32_t i = 0;
+        for (uint32_t j = 0; j < realSize; ++j) {
+            if (LJ[j] / size > rowCounter) {
+                LI[i] = j;
+                ++rowCounter;
+            }
+            LJ[j] = lJ[j] % size;
+        }
     }
-}
-
-std::vector<int> getRandomVector(int sz) {
-    std::mt19937 gen;
-    gen.seed(static_cast<unsigned int>(time(0)));
-    std::vector<int> vec(sz);
-    for (int  i = 0; i < sz; i++) { vec[i] = gen() % 100; }
-    return vec;
 }
