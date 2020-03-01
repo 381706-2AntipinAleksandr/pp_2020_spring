@@ -15,7 +15,7 @@ class SparseMatrix
 {
 public:
     SparseMatrix(const size_t size = 1);
-    SparseMatrix(const SparseMatrix& mat);
+    SparseMatrix(const SparseMatrix<T, coeff>& mat);
     void getRandomMatrix();
     double getElem(size_t i, size_t j);
 private:
