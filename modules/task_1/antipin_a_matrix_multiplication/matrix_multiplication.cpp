@@ -51,3 +51,11 @@ SparseMatrix<T, coeff>::SparseMatrix(const size_t size) {
         }
     }
 }
+
+template<type T, uint16_t coeff>
+double SparseMatrix<T, coeff>::getElem(rsize_t i, rsize_t j) {
+    if (i < 0 || j < 0 || i > A.size() || j > A.size()) {
+        throw("Wrong index of element");
+    }
+
+}
