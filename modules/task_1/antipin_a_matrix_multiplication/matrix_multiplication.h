@@ -16,7 +16,7 @@ class SparseMatrix
 public:
     SparseMatrix(const size_t size = 1);
     SparseMatrix(const SparseMatrix<T, coeff>& mat);
-    void getRandomMatrix();
+    void getRandomMatrix(const size_t size);
     double getElem(size_t i, size_t j);
 private:
     std::vector<double> A;
@@ -24,6 +24,6 @@ private:
     std::vector<size_t> LJ;
 };
 
-int getSequentialOperations(std::vector<int> vec);
+//int getSequentialOperations(std::vector<int> vec);
 
 #endif  // MODULES_TASK_1_TEST_ANTIPIN_A_MATRIX_MULTIPLICATION_MATRIX_MULTIPLICATION_H_

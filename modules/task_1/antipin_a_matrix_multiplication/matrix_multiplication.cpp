@@ -23,7 +23,7 @@ SparseMatrix<T, coeff>::SparseMatrix(const size_t size) {
         for (size_t val : LI) {
             val = gen() % (size * size);
         }
-        std::sort(LI[0], LI[realSize - 1]);
+        std::sort(LI.begin(), LI.end());
         int colCounter = -1;
         uint32_t j = 0;
         for (uint32_t i = 0; i < realSize; ++i) {
@@ -39,7 +39,7 @@ SparseMatrix<T, coeff>::SparseMatrix(const size_t size) {
         for (size_t val : LJ) {
             val = gen() % (size * size);
         }
-        std::sort(LJ[0], LJ[realSize - 1]);
+        std::sort(LJ.begin(), LJ.end());
         int rowCounter = -1;
         uint32_t i = 0;
         for (uint32_t j = 0; j < realSize; ++j) {
@@ -47,7 +47,7 @@ SparseMatrix<T, coeff>::SparseMatrix(const size_t size) {
                 LI[i] = j;
                 ++rowCounter;
             }
-            LJ[j] = lJ[j] % size;
+            LJ[j] = LJ[j] % size;
         }
     }
 }
@@ -74,7 +74,7 @@ void SparseMatrix<T, coeff>::getRandomMatrix(const size_t size) {
         for (size_t val : LI) {
             val = gen() % (size * size);
         }
-        std::sort(LI[0], LI[realSize - 1]);
+        std::sort(LI.begin(), LI.end());
         int colCounter = -1;
         uint32_t j = 0;
         for (uint32_t i = 0; i < realSize; ++i) {
@@ -91,7 +91,7 @@ void SparseMatrix<T, coeff>::getRandomMatrix(const size_t size) {
         for (size_t val : LJ) {
             val = gen() % (size * size);
         }
-        std::sort(LJ[0], LJ[realSize - 1]);
+        std::sort(LJ.begin(), LJ.end());
         int rowCounter = -1;
         uint32_t i = 0;
         for (uint32_t j = 0; j < realSize; ++j) {
