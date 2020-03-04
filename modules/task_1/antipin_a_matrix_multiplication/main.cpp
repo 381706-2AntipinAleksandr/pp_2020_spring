@@ -4,7 +4,16 @@
 #include "./matrix_multiplication.h"
 
 TEST(Matrix_base, can_create_matrix) {
-    SparseMatrix<CCS, 6> some(100);
+    ASSERT_NO_THROW((SparseMatrix<CCS, 10>(1000)));
+}
+
+TEST(Matrix_base, can_throw_if_it_is_not_a_sparse_matrix) {
+    ASSERT_ANY_THROW((SparseMatrix<CCS, 4>(100)));
+}
+
+TEST(Matrix_base, can_return_element) {
+    SparseMatrix<CCS, 10> A(100);
+    ASSERT_NO_THROW(A.getElem(50, 25));
 }
 
 int main(int argc, char** argv) {
