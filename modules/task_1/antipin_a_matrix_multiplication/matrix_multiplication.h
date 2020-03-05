@@ -1,27 +1,27 @@
 // Copyright 2020 Antipin Alexander
-#ifndef MODULES_TASK_1_TEST_ANTIPIN_A_MATRIX_MULTIPLICATION_MATRIX_MULTIPLICATION_H_
-#define MODULES_TASK_1_TEST_ANTIPIN_A_MATRIX_MULTIPLICATION_MATRIX_MULTIPLICATION_H_
+#ifndef MODULES_TASK_1_ANTIPIN_A_MATRIX_MULTIPLICATION_MATRIX_MULTIPLICATION_H_
+#define MODULES_TASK_1_ANTIPIN_A_MATRIX_MULTIPLICATION_MATRIX_MULTIPLICATION_H_
 
 #include <vector>
 #include <random>
 #include <ctime>
 #include <algorithm>
 
-enum type
-{
+enum type {
     CRS,
     CCS
 };
 
 template <type T = CCS, uint16_t coeff = 6>
-class SparseMatrix
-{
-public:
+class SparseMatrix {
+ public:
     SparseMatrix(const size_t size = 1);
     SparseMatrix(const SparseMatrix<T, coeff>& mat);
     void getRandomMatrix(const size_t size);
-    double getElem(size_t i, size_t j);
-private:
+    double getElem(const size_t i, const size_t j);
+    void setElem(const double elem, const size_t i, const size_t j);
+    void setMatrix(const std::vector<double>& A, const std::vector<size_t>& LI, const std::vector<size_t>& LJ);
+ private:
     std::vector<double> A;
     std::vector<size_t> LI;
     std::vector<size_t> LJ;
@@ -56,9 +56,8 @@ SparseMatrix<T, coeff>::SparseMatrix(const size_t size) {
             }
             LI[i] = LI[i] % size;
         }
-        LJ[j] = realSize + 1;
-    }
-    else if (T == CRS) {
+        LJ[j] = realSize;
+    } else if (T == CRS) {
         LJ.resize(realSize);
         LI.resize(size + 1);
         for (size_t& val : LJ) {
@@ -75,7 +74,7 @@ SparseMatrix<T, coeff>::SparseMatrix(const size_t size) {
             }
             LJ[j] = LJ[j] % size;
         }
-        LI[i] = realSize + 1;
+        LI[i] = realSize;
     }
 }
 
@@ -111,8 +110,7 @@ void SparseMatrix<T, coeff>::getRandomMatrix(const size_t size) {
             }
             LI[i] = LI[i] / size;
         }
-    }
-    else if (T == CRS) {
+    } else if (T == CRS) {
         LJ.resize(realSize);
         LI.resize(size + 1);
         for (size_t& val : LJ) {
@@ -132,7 +130,7 @@ void SparseMatrix<T, coeff>::getRandomMatrix(const size_t size) {
 }
 
 template<type T, uint16_t coeff>
-double SparseMatrix<T, coeff>::getElem(size_t i, size_t j) {
+double SparseMatrix<T, coeff>::getElem(const size_t i, const size_t j) {
     if (i < 0 || j < 0 || i > A.size() || j > A.size()) {
         throw("Wrong index of element");
     }
@@ -144,8 +142,7 @@ double SparseMatrix<T, coeff>::getElem(size_t i, size_t j) {
                 break;
             }
         }
-    }
-    else if (T == CRS) {
+    } else if (T == CRS) {
         for (size_t k = LI[i]; k < LI[i + 1]; ++k) {
             if (LJ[k] == j) {
                 res = A[k];
@@ -156,6 +153,29 @@ double SparseMatrix<T, coeff>::getElem(size_t i, size_t j) {
     return res;
 }
 
-//int getSequentialOperations(std::vector<int> vec);
+template<type T, uint16_t coeff>
+void SparseMatrix<T, coeff>::setElem(const double elem, const size_t i, const size_t j) {
+    if (A.size() < i || A.size() < j || i < 0 || j < 0) {
+        throw("Out of matrix range");
+    }
+}
 
-#endif  // MODULES_TASK_1_TEST_ANTIPIN_A_MATRIX_MULTIPLICATION_MATRIX_MULTIPLICATION_H_
+template<type T, uint16_t coeff>
+void SparseMatrix<T, coeff>::setMatrix(const std::vector<double>& A, const std::vector<size_t>& LI, const std::vector<size_t>& LJ) {
+    if (T == CCS) {
+        if (LJ.size() > LI.size()) {
+            throw("Wrong matrix type");
+        }
+    } else {
+        if (LI.size() > LJ.size()) {
+            throw("Wrong matrix type");
+        }
+    }
+    this->A = A;
+    this->LI = LI;
+    this->LJ = LJ;
+}
+
+// int getSequentialOperations(std::vector<int> vec);
+
+#endif  // MODULES_TASK_1_ANTIPIN_A_MATRIX_MULTIPLICATION_MATRIX_MULTIPLICATION_H_
