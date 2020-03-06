@@ -15,7 +15,7 @@ enum type {
 template <type T = CCS>
 class SparseMatrix {
  public:
-    explicit SparseMatrix(const size_t size = 1, const uint16_t coeff = 6);
+    SparseMatrix(const size_t size = 1, const uint16_t coeff = 6);
     SparseMatrix(const SparseMatrix<T>& mat);
     void getRandomMatrix(const size_t size, const uint16_t coeff);
     double getElem(const size_t i, const size_t j);
