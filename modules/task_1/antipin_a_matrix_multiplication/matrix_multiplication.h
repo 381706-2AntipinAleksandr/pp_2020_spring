@@ -12,12 +12,12 @@ enum type {
     CCS
 };
 
-template <type T = CCS, uint16_t coeff = 6>
+template <type T = CCS>
 class SparseMatrix {
  public:
-    SparseMatrix(const size_t size = 1);
-    SparseMatrix(const SparseMatrix<T, coeff>& mat);
-    void getRandomMatrix(const size_t size);
+    explicit SparseMatrix(const size_t size = 1, const uint16_t coeff = 6);
+    SparseMatrix(const SparseMatrix<T>& mat);
+    void getRandomMatrix(const size_t size, const uint16_t coeff);
     double getElem(const size_t i, const size_t j);
     void setElem(const double elem, const size_t i, const size_t j);
     void setMatrix(const std::vector<double>& A, const std::vector<size_t>& LI, const std::vector<size_t>& LJ);
@@ -27,8 +27,8 @@ class SparseMatrix {
     std::vector<size_t> LJ;
 };
 
-template <type T, uint16_t coeff>
-SparseMatrix<T, coeff>::SparseMatrix(const size_t size) {
+template <type T>
+SparseMatrix<T>::SparseMatrix(const size_t size, const uint16_t coeff) {
     if (coeff <= 5) {
         throw("So small coefficient, it is not a sparse matrix");
     }
@@ -78,15 +78,15 @@ SparseMatrix<T, coeff>::SparseMatrix(const size_t size) {
     }
 }
 
-template<type T, uint16_t coeff>
-SparseMatrix<T, coeff>::SparseMatrix(const SparseMatrix<T, coeff>& mat) {
+template<type T>
+SparseMatrix<T>::SparseMatrix(const SparseMatrix<T>& mat) {
     A = mat.A;
     LI = mat.LI;
     LJ = mat.LJ;
 }
 
-template<type T, uint16_t coeff>
-void SparseMatrix<T, coeff>::getRandomMatrix(const size_t size) {
+template<type T>
+void SparseMatrix<T>::getRandomMatrix(const size_t size, const uint16_t coeff) {
     size_t realSize = (size * size) / coeff;
     A.resize(realSize);
     std::mt19937 gen;
@@ -129,8 +129,8 @@ void SparseMatrix<T, coeff>::getRandomMatrix(const size_t size) {
     }
 }
 
-template<type T, uint16_t coeff>
-double SparseMatrix<T, coeff>::getElem(const size_t i, const size_t j) {
+template<type T>
+double SparseMatrix<T>::getElem(const size_t i, const size_t j) {
     if (i < 0 || j < 0 || i > A.size() || j > A.size()) {
         throw("Wrong index of element");
     }
@@ -153,15 +153,16 @@ double SparseMatrix<T, coeff>::getElem(const size_t i, const size_t j) {
     return res;
 }
 
-template<type T, uint16_t coeff>
-void SparseMatrix<T, coeff>::setElem(const double elem, const size_t i, const size_t j) {
+template<type T>
+void SparseMatrix<T>::setElem(const double elem, const size_t i, const size_t j) {
     if (A.size() < i || A.size() < j || i < 0 || j < 0) {
         throw("Out of matrix range");
     }
 }
 
-template<type T, uint16_t coeff>
-void SparseMatrix<T, coeff>::setMatrix(const std::vector<double>& A, const std::vector<size_t>& LI, const std::vector<size_t>& LJ) {
+template<type T>
+void SparseMatrix<T>::setMatrix(const std::vector<double>& A, const std::vector<size_t>&
+    LI, const std::vector<size_t>& LJ) {
     if (T == CCS) {
         if (LJ.size() > LI.size()) {
             throw("Wrong matrix type");
@@ -176,6 +177,11 @@ void SparseMatrix<T, coeff>::setMatrix(const std::vector<double>& A, const std::
     this->LJ = LJ;
 }
 
-// int getSequentialOperations(std::vector<int> vec);
+void matrixMultiplication(const std::vector<double>& A, const size_t n, const std::vector<double>& B,
+    std::vector<double>* C);
+
+double isZero(const double nomber);
+
+void getSequentialMatrixMultiplication(const SparseMatrix<CCS>& A, const SparseMatrix<CCS>& B, SparseMatrix<CCS>* C);
 
 #endif  // MODULES_TASK_1_ANTIPIN_A_MATRIX_MULTIPLICATION_MATRIX_MULTIPLICATION_H_
