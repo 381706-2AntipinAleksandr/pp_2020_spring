@@ -124,7 +124,7 @@ void SparseMatrix<T>::getRandomMatrix(const size_t size, const uint16_t coeff) {
                 LI[i] = j;
                 ++rowCounter;
             }
-            LJ[j] = lJ[j] % size;
+            LJ[j] = LJ[j] % size;
         }
     }
 }
