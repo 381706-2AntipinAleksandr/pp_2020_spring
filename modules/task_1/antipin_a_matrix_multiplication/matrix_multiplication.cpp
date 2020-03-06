@@ -29,5 +29,4 @@ double isZero(const double number) {
 }
 
 void getSequentialMatrixMultiplication(const SparseMatrix<CCS>& A, const SparseMatrix<CCS>& B, SparseMatrix<CCS>* C) {
-
 }
