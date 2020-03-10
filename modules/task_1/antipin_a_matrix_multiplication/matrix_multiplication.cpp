@@ -43,6 +43,7 @@ void convertMatrix(const SparseMatrix<CCS>& A, SparseMatrix<CRS>* B) {
     B->A.resize(A.getRealSize());
     B->LI.resize(A.getMatrixSize() + 1);
     B->LJ.resize(A.getRealSize());
+    B->n = A.n;
 
     std::vector<size_t> cols(A.getRealSize());
     for (size_t lj = 0; lj < A.getMatrixSize(); ++lj) {
@@ -68,6 +69,7 @@ void convertMatrix(const SparseMatrix<CRS>& A, SparseMatrix<CCS>* B) {
     B->A.resize(A.getRealSize());
     B->LJ.resize(A.getMatrixSize() + 1);
     B->LI.resize(A.getRealSize());
+    B->n = A.n;
 
     std::vector<size_t> rows(A.getRealSize());
     for (size_t li = 0; li < A.getMatrixSize(); ++li) {
@@ -97,8 +99,8 @@ void getSequentialMatrixMultiplication(const SparseMatrix<CCS>& A, const SparseM
     SparseMatrix<CRS> tmp;
     convertMatrix(A, &tmp);
 
-    C->A.resize(A.getRealSize());
-    C->LI.resize(A.getRealSize());
+    C->A.resize(A.getMatrixSize() * B.getMatrixSize());
+    C->LI.resize(A.getMatrixSize() * B.getMatrixSize());
     C->LJ.resize(A.getMatrixSize() + 1);
 
     size_t iterator = 0;
@@ -106,14 +108,21 @@ void getSequentialMatrixMultiplication(const SparseMatrix<CCS>& A, const SparseM
     for (size_t n = 0; n < A.getMatrixSize(); ++n) {
         size_t li = 0;
         for (size_t i = 0; i < tmp.getMatrixSize(); ++i) {
+            double elem = 0.0;
             for (size_t j = B.LJ[lj]; j < B.LJ[lj + 1]; ++j) {
-                C->A[iterator] += isZero(tmp.A[i] * B.A[j]);
+                elem += isZero(tmp.getElem(i, B.LI[j]) * B.A[j]);
             }
-            C->LI[iterator] = li;
-            ++iterator;
+            if (elem != 0.0) {
+                C->A[iterator] = elem;
+                C->LI[iterator] = li;
+                ++iterator;
+            }
             ++li;
         }
-        C->LJ[n] = lj;
+        C->LJ[n + 1] = iterator;
         ++lj;
     }
+
+    C->A.resize(iterator);
+    C->LI.resize(iterator);
 }
