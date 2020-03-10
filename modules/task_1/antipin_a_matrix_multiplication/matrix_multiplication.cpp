@@ -28,5 +28,92 @@ double isZero(const double number) {
     }
 }
 
+void getRandomMatrix(std::vector<double>* A, const size_t n) {
+    std::random_device rd;
+    std::mt19937 gen(rd());
+    std::uniform_real_distribution<> dist(1, 2);
+
+    A->resize(n);
+    for (double& elem : (*A)) {
+        elem = 100 - dist(gen) * 50;
+    }
+}
+
+void convertMatrix(const SparseMatrix<CCS>& A, SparseMatrix<CRS>* B) {
+    B->A.resize(A.getRealSize());
+    B->LI.resize(A.getMatrixSize() + 1);
+    B->LJ.resize(A.getRealSize());
+
+    std::vector<size_t> cols(A.getRealSize());
+    for (size_t lj = 0; lj < A.getMatrixSize(); ++lj) {
+        for (size_t i = A.LJ[lj]; i < A.LJ[lj + 1]; ++i) {
+            cols[i] = lj;
+        }
+    }
+
+    size_t li = 0;
+    for (size_t n = 0; n < A.getMatrixSize(); ++n) {
+        for (size_t i = 0; i < A.getRealSize(); ++i) {
+            if (A.LI[i] == n) {
+                B->A[li] = A.A[i];
+                B->LJ[li] = cols[i];
+                ++li;
+            }
+        }
+        B->LI[n + 1] = li;
+    }
+}
+
+void convertMatrix(const SparseMatrix<CRS>& A, SparseMatrix<CCS>* B) {
+    B->A.resize(A.getRealSize());
+    B->LJ.resize(A.getMatrixSize() + 1);
+    B->LI.resize(A.getRealSize());
+
+    std::vector<size_t> rows(A.getRealSize());
+    for (size_t li = 0; li < A.getMatrixSize(); ++li) {
+        for (size_t j = A.LI[li]; j < A.LI[li + 1]; ++j) {
+            rows[j] = li;
+        }
+    }
+
+    size_t lj = 0;
+    for (size_t n = 0; n < A.getMatrixSize(); ++n) {
+        for (size_t j = 0; j < A.getRealSize(); ++j) {
+            if (A.LJ[j] == n) {
+                B->A[lj] = A.A[j];
+                B->LI[lj] = rows[j];
+                ++lj;
+            }
+        }
+        B->LJ[n + 1] = lj;
+    }
+}
+
 void getSequentialMatrixMultiplication(const SparseMatrix<CCS>& A, const SparseMatrix<CCS>& B, SparseMatrix<CCS>* C) {
+    if (A.getMatrixSize() != B.getMatrixSize()) {
+        throw("Matrices have a different range");
+    }
+
+    SparseMatrix<CRS> tmp;
+    convertMatrix(A, &tmp);
+
+    C->A.resize(A.getRealSize());
+    C->LI.resize(A.getRealSize());
+    C->LJ.resize(A.getMatrixSize() + 1);
+
+    size_t iterator = 0;
+    size_t lj = 0;
+    for (size_t n = 0; n < A.getMatrixSize(); ++n) {
+        size_t li = 0;
+        for (size_t i = 0; i < tmp.getMatrixSize(); ++i) {
+            for (size_t j = B.LJ[lj]; j < B.LJ[lj + 1]; ++j) {
+                C->A[iterator] += isZero(tmp.A[i] * B.A[j]);
+            }
+            C->LI[iterator] = li;
+            ++iterator;
+            ++li;
+        }
+        C->LJ[n] = lj;
+        ++lj;
+    }
 }

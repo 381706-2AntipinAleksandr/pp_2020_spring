@@ -20,11 +20,20 @@ class SparseMatrix {
     void getRandomMatrix(const size_t size, const uint16_t coeff);
     double getElem(const size_t i, const size_t j);
     void setElem(const double elem, const size_t i, const size_t j);
-    void setMatrix(const std::vector<double>& A, const std::vector<size_t>& LI, const std::vector<size_t>& LJ);
+    void setMatrix(const std::vector<double>& A, const std::vector<size_t>& LI, const std::vector<size_t>& LJ,
+        const size_t n);
+    size_t getMatrixSize() const;
+    size_t getRealSize() const;
+
+    friend void convertMatrix(const SparseMatrix<CCS>& A, SparseMatrix<CRS>* B);
+    friend void convertMatrix(const SparseMatrix<CRS>& A, SparseMatrix<CCS>* B);
+    friend void getSequentialMatrixMultiplication(const SparseMatrix<CCS>& A, const SparseMatrix<CCS>& B,
+        SparseMatrix<CCS>* C);
  private:
     std::vector<double> A;
     std::vector<size_t> LI;
     std::vector<size_t> LJ;
+    size_t n;
 };
 
 template <type T>
@@ -32,12 +41,14 @@ SparseMatrix<T>::SparseMatrix(const size_t size, const uint16_t coeff) {
     if (coeff <= 5) {
         throw("So small coefficient, it is not a sparse matrix");
     }
+    n = size;
     size_t realSize = (size * size) / coeff;
     A.resize(realSize);
-    std::mt19937 gen;
-    gen.seed(static_cast<unsigned int>(time(0)));
+    std::random_device rd;
+    std::mt19937 gen(rd());
+    std::uniform_real_distribution<> dist(1, 2);
     for (double& val : A) {
-        val = gen() % 100;
+        val = 100 - dist(gen) * 50;
     }
     if (T == CCS) {
         LI.resize(realSize);
@@ -78,21 +89,24 @@ SparseMatrix<T>::SparseMatrix(const size_t size, const uint16_t coeff) {
     }
 }
 
-template<type T>
+template <type T>
 SparseMatrix<T>::SparseMatrix(const SparseMatrix<T>& mat) {
+    n = mat.n;
     A = mat.A;
     LI = mat.LI;
     LJ = mat.LJ;
 }
 
-template<type T>
+template <type T>
 void SparseMatrix<T>::getRandomMatrix(const size_t size, const uint16_t coeff) {
+    n = size;
     size_t realSize = (size * size) / coeff;
     A.resize(realSize);
-    std::mt19937 gen;
-    gen.seed(static_cast<unsigned int>(time(0)));
+    std::random_device rd;
+    std::mt19937 gen(rd());
+    std::uniform_real_distribution<> dist(1, 2);
     for (double& val : A) {
-        val = gen() % 100;
+        val = 100 - dist(gen) * 50;
     }
     if (T == CCS) {
         LI.resize(realSize);
@@ -101,14 +115,15 @@ void SparseMatrix<T>::getRandomMatrix(const size_t size, const uint16_t coeff) {
             val = gen() % (size * size);
         }
         std::sort(LI.begin(), LI.end());
-        int colCounter = -1;
+        int colCounter = 0;
         uint32_t j = 0;
         for (uint32_t i = 0; i < realSize; ++i) {
             if (LI[i] / size > colCounter) {
                 LJ[j] = i;
+                ++j;
                 ++colCounter;
             }
-            LI[i] = LI[i] / size;
+            LI[i] = LI[i] % size;
         }
     } else if (T == CRS) {
         LJ.resize(realSize);
@@ -117,11 +132,12 @@ void SparseMatrix<T>::getRandomMatrix(const size_t size, const uint16_t coeff) {
             val = gen() % (size * size);
         }
         std::sort(LJ.begin(), LJ.end());
-        int rowCounter = -1;
+        int rowCounter = 0;
         uint32_t i = 0;
         for (uint32_t j = 0; j < realSize; ++j) {
             if (LJ[j] / size > rowCounter) {
                 LI[i] = j;
+                ++i;
                 ++rowCounter;
             }
             LJ[j] = LJ[j] % size;
@@ -129,7 +145,7 @@ void SparseMatrix<T>::getRandomMatrix(const size_t size, const uint16_t coeff) {
     }
 }
 
-template<type T>
+template <type T>
 double SparseMatrix<T>::getElem(const size_t i, const size_t j) {
     if (i < 0 || j < 0 || i > A.size() || j > A.size()) {
         throw("Wrong index of element");
@@ -153,16 +169,16 @@ double SparseMatrix<T>::getElem(const size_t i, const size_t j) {
     return res;
 }
 
-template<type T>
+template <type T>
 void SparseMatrix<T>::setElem(const double elem, const size_t i, const size_t j) {
     if (A.size() < i || A.size() < j || i < 0 || j < 0) {
         throw("Out of matrix range");
     }
 }
 
-template<type T>
+template <type T>
 void SparseMatrix<T>::setMatrix(const std::vector<double>& A, const std::vector<size_t>&
-    LI, const std::vector<size_t>& LJ) {
+    LI, const std::vector<size_t>& LJ, const size_t n) {
     if (T == CCS) {
         if (LJ.size() > LI.size()) {
             throw("Wrong matrix type");
@@ -172,15 +188,32 @@ void SparseMatrix<T>::setMatrix(const std::vector<double>& A, const std::vector<
             throw("Wrong matrix type");
         }
     }
+    this->n = n;
     this->A = A;
     this->LI = LI;
     this->LJ = LJ;
+}
+
+template <type T>
+size_t SparseMatrix<T>::getMatrixSize() const {
+    return n;
+}
+
+template <type T>
+size_t SparseMatrix<T>::getRealSize() const {
+    return A.size();
 }
 
 void matrixMultiplication(const std::vector<double>& A, const size_t n, const std::vector<double>& B,
     std::vector<double>* C);
 
 double isZero(const double nomber);
+
+void getRandomMatrix(std::vector<double>* A, const size_t n);
+
+void convertMatrix(const SparseMatrix<CCS>& A, SparseMatrix<CRS>* B);
+
+void convertMatrix(const SparseMatrix<CRS>& A, SparseMatrix<CCS>* B);
 
 void getSequentialMatrixMultiplication(const SparseMatrix<CCS>& A, const SparseMatrix<CCS>& B, SparseMatrix<CCS>* C);
 
