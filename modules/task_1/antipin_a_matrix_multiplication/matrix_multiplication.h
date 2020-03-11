@@ -18,7 +18,7 @@ class SparseMatrix {
     explicit SparseMatrix(const size_t size = 1, const uint16_t coeff = 6);
     SparseMatrix(const SparseMatrix<T>& mat);
     void getRandomMatrix(const size_t size, const uint16_t coeff);
-    double getElem(const size_t i, const size_t j);
+    double getElem(const size_t i, const size_t j) const;
     void setElem(const double elem, const size_t i, const size_t j);
     void setMatrix(const std::vector<double>& A, const std::vector<size_t>& LI, const std::vector<size_t>& LJ,
         const size_t n);
@@ -57,7 +57,7 @@ SparseMatrix<T>::SparseMatrix(const size_t size, const uint16_t coeff) {
             val = gen() % (size * size);
         }
         std::sort(LI.begin(), LI.end());
-        int colCounter = 0;
+        size_t colCounter = 0;
         uint32_t j = 0;
         for (uint32_t i = 0; i < realSize; ++i) {
             if (LI[i] / size >= colCounter) {
@@ -75,7 +75,7 @@ SparseMatrix<T>::SparseMatrix(const size_t size, const uint16_t coeff) {
             val = gen() % (size * size);
         }
         std::sort(LJ.begin(), LJ.end());
-        int rowCounter = 0;
+        size_t rowCounter = 0;
         uint32_t i = 0;
         for (uint32_t j = 0; j < realSize; ++j) {
             if (LJ[j] / size >= rowCounter) {
@@ -146,7 +146,7 @@ void SparseMatrix<T>::getRandomMatrix(const size_t size, const uint16_t coeff) {
 }
 
 template <type T>
-double SparseMatrix<T>::getElem(const size_t i, const size_t j) {
+double SparseMatrix<T>::getElem(const size_t i, const size_t j) const {
     if (i < 0 || j < 0 || i > A.size() || j > A.size()) {
         throw("Wrong index of element");
     }

@@ -109,8 +109,15 @@ void getSequentialMatrixMultiplication(const SparseMatrix<CCS>& A, const SparseM
         size_t li = 0;
         for (size_t i = 0; i < tmp.getMatrixSize(); ++i) {
             double elem = 0.0;
-            for (size_t j = B.LJ[lj]; j < B.LJ[lj + 1]; ++j) {
-                elem += isZero(tmp.getElem(i, B.LI[j]) * B.A[j]);
+            bool isRow = (tmp.LI[i + 1] - tmp.LI[i]) < (B.LJ[lj + 1] - B.LJ[lj]) ? true : false;
+            if (!isRow) {
+                for (size_t j = B.LJ[lj]; j < B.LJ[lj + 1]; ++j) {
+                    elem += isZero(tmp.getElem(i, B.LI[j]) * B.A[j]);
+                }
+            } else {
+                for (size_t j = tmp.LI[i]; j < tmp.LI[i + 1]; ++j) {
+                    elem += isZero(tmp.A[j] * B.getElem(tmp.LJ[j], n));
+                }
             }
             if (elem != 0.0) {
                 C->A[iterator] = elem;

@@ -89,30 +89,30 @@ TEST(Matrix_base, can_convert_matrix_from_CCR_to_CRS) {
     std::vector<double> A = { 8.0, 5.0, 2.0, 4.0, 9.0, 1.0, 3.0 };
     std::vector<size_t> LI = { 5, 2, 0, 5, 3, 3, 4 };
     std::vector<size_t> LJ = { 0, 1, 2, 3, 4, 5, 7 };
-    SparseMatrix<CCS> mat(6);
+    SparseMatrix<CCS> mat;
     mat.setMatrix(A, LI, LJ, 6);
-    SparseMatrix<CRS> mat2(6);
+    SparseMatrix<CRS> mat2;
     ASSERT_NO_THROW(convertMatrix(mat, &mat2));
 }
 
-TEST(Marix_base, can_convert_matrix_from_CCR_to_CRS_correct_1) {
+TEST(Matrix_base, can_convert_matrix_from_CCR_to_CRS_correct_1) {
     std::vector<double> A = { 2.0, 5.0, 8.0, 1.0, 4.0, 9.0, 1.0, 1.0, 3.0 };
     std::vector<size_t> LI = { 0, 2, 5, 0, 5, 3, 2, 3, 5 };
     std::vector<size_t> LJ = { 0, 0, 3, 3, 5, 6, 9 };
-    SparseMatrix<CCS> mat(6);
+    SparseMatrix<CCS> mat;
     mat.setMatrix(A, LI, LJ, 6);
-    SparseMatrix<CRS> mat2(6);
+    SparseMatrix<CRS> mat2;
     convertMatrix(mat, &mat2);
     EXPECT_EQ(mat.getElem(2, 1), 5);
 }
 
-TEST(Marix_base, can_convert_matrix_from_CCR_to_CRS_correct_2) {
+TEST(Matrix_base, can_convert_matrix_from_CCR_to_CRS_correct_2) {
     std::vector<double> A = { 2.0, 5.0, 8.0, 1.0, 4.0, 9.0, 1.0, 1.0, 3.0 };
     std::vector<size_t> LI = { 0, 2, 5, 0, 5, 3, 2, 3, 5 };
     std::vector<size_t> LJ = { 0, 0, 3, 3, 5, 6, 9 };
-    SparseMatrix<CCS> mat(6);
+    SparseMatrix<CCS> mat;
     mat.setMatrix(A, LI, LJ, 6);
-    SparseMatrix<CRS> mat2(6);
+    SparseMatrix<CRS> mat2;
     convertMatrix(mat, &mat2);
     EXPECT_EQ(mat.getElem(5, 3), 4);
 }
@@ -121,30 +121,30 @@ TEST(Matrix_base, can_convert_matrix_from_CRS_to_CCR) {
     std::vector<double> A = { 2.0, 5.0, 9.0, 1.0, 3.0, 8.0, 4.0 };
     std::vector<size_t> LI = { 0, 1, 1, 2, 4, 5, 7 };
     std::vector<size_t> LJ = { 2, 1, 4, 5, 5, 0, 3 };
-    SparseMatrix<CRS> mat(6);
+    SparseMatrix<CRS> mat;
     mat.setMatrix(A, LI, LJ, 6);
-    SparseMatrix<CCS> mat2(6);
+    SparseMatrix<CCS> mat2;
     ASSERT_NO_THROW(convertMatrix(mat, &mat2));
 }
 
-TEST(Marix_base, can_convert_matrix_from_CRS_to_CCR_correct_1) {
+TEST(Matrix_base, can_convert_matrix_from_CRS_to_CCR_correct_1) {
     std::vector<double> A = { 2.0, 1.0, 5.0, 1.0, 9.0, 1.0, 8.0, 4.0, 3.0 };
     std::vector<size_t> LI = { 0, 2, 2, 4, 6, 6, 9 };
     std::vector<size_t> LJ = { 1, 3, 1, 5, 4, 5, 1, 3, 5 };
-    SparseMatrix<CRS> mat(6);
+    SparseMatrix<CRS> mat;
     mat.setMatrix(A, LI, LJ, 6);
-    SparseMatrix<CCS> mat2(6);
+    SparseMatrix<CCS> mat2;
     convertMatrix(mat, &mat2);
     EXPECT_EQ(mat.getElem(2, 1), 5);
 }
 
-TEST(Marix_base, can_convert_matrix_from_CRS_to_CCR_correct_2) {
+TEST(Matrix_base, can_convert_matrix_from_CRS_to_CCR_correct_2) {
     std::vector<double> A = { 2.0, 1.0, 5.0, 1.0, 9.0, 1.0, 8.0, 4.0, 3.0 };
     std::vector<size_t> LI = { 0, 2, 2, 4, 6, 6, 9 };
     std::vector<size_t> LJ = { 1, 3, 1, 5, 4, 5, 1, 3, 5 };
-    SparseMatrix<CRS> mat(6);
+    SparseMatrix<CRS> mat;
     mat.setMatrix(A, LI, LJ, 6);
-    SparseMatrix<CCS> mat2(6);
+    SparseMatrix<CCS> mat2;
     convertMatrix(mat, &mat2);
     EXPECT_EQ(mat.getElem(3, 4), 9);
 }
@@ -153,19 +153,50 @@ TEST(Matrix_multiplication, can_multiply_matrices) {
     std::vector<double> A = { 8.0, 5.0, 2.0, 4.0, 9.0, 1.0, 3.0 };
     std::vector<size_t> LI = { 5, 2, 0, 5, 3, 3, 4 };
     std::vector<size_t> LJ = { 0, 1, 2, 3, 4, 5, 7 };
-    SparseMatrix<CCS> mat(6);
+    SparseMatrix<CCS> mat;
     mat.setMatrix(A, LI, LJ, 6);
 
     std::vector<double> A1 = { 2.0, 5.0, 8.0, 1.0, 4.0, 9.0, 1.0, 1.0, 3.0 };
     std::vector<size_t> LI1 = { 0, 2, 5, 0, 5, 3, 2, 3, 5 };
     std::vector<size_t> LJ1 = { 0, 0, 3, 3, 5, 6, 9 };
-    SparseMatrix<CCS> mat1(6);
+    SparseMatrix<CCS> mat1;
     mat1.setMatrix(A1, LI1, LJ1, 6);
 
     SparseMatrix<CCS> res;
 
     ASSERT_NO_THROW(getSequentialMatrixMultiplication(mat, mat1, &res));
 }
+
+TEST(Matrix_multiplication, can_multiply_matrices_correct) {
+    std::vector<double> A = { 8.0, 5.0, 2.0, 4.0, 9.0, 1.0, 3.0 };
+    std::vector<size_t> LI = { 5, 2, 0, 5, 3, 3, 4 };
+    std::vector<size_t> LJ = { 0, 1, 2, 3, 4, 5, 7 };
+    SparseMatrix<CCS> mat;
+    mat.setMatrix(A, LI, LJ, 6);
+
+    std::vector<double> A1 = { 2.0, 5.0, 8.0, 1.0, 4.0, 9.0, 1.0, 1.0, 3.0 };
+    std::vector<size_t> LI1 = { 0, 2, 5, 0, 5, 3, 2, 3, 5 };
+    std::vector<size_t> LJ1 = { 0, 0, 3, 3, 5, 6, 9 };
+    SparseMatrix<CCS> mat1;
+    mat1.setMatrix(A1, LI1, LJ1, 6);
+
+    SparseMatrix<CCS> res;
+
+    getSequentialMatrixMultiplication(mat, mat1, &res);
+
+    EXPECT_EQ(res.getElem(3, 1), 8);
+    EXPECT_EQ(res.getElem(4, 3), 12);
+}
+
+/*TEST(Matrix_multiplication, can_multiply_random_matrices) {
+    SparseMatrix<CCS> mat(1000, 50);
+
+    SparseMatrix<CCS> mat1(1000, 50);
+
+    SparseMatrix<CCS> res;
+
+    ASSERT_NO_THROW(getSequentialMatrixMultiplication(mat, mat1, &res));
+}*/
 
 int main(int argc, char** argv) {
     ::testing::InitGoogleTest(&argc, argv);
