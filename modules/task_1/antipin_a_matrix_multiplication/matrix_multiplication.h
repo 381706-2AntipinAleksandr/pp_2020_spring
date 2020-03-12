@@ -86,7 +86,7 @@ SparseMatrix<T>::SparseMatrix(const size_t size, const uint16_t coeff) {
         size_t rowCounter = 0;
         uint32_t i = 0;
         for (uint32_t j = 0; j < realSize; ) {
-            if (j != 0 && LJ[j] == LJ[j - 1]) {
+            if (j != 0 && (LJ[j] % size) == LJ[j - 1]) {
                 LJ.erase(LJ.begin() + i);
                 A.erase(A.begin() + i);
                 --realSize;
@@ -133,13 +133,20 @@ void SparseMatrix<T>::getRandomMatrix(const size_t size, const uint16_t coeff) {
         std::sort(LI.begin(), LI.end());
         int colCounter = 0;
         uint32_t j = 0;
-        for (uint32_t i = 0; i < realSize; ++i) {
+        for (uint32_t i = 0; i < realSize; ) {
+            if (i != 0 && (LI[i] % size) == LI[i - 1]) {
+                LI.erase(LI.begin() + i);
+                A.erase(A.begin() + i);
+                --realSize;
+                continue;
+            }
             if (LI[i] / size > colCounter) {
                 LJ[j] = i;
                 ++j;
                 ++colCounter;
             }
             LI[i] = LI[i] % size;
+            ++i;
         }
     } else if (T == CRS) {
         LJ.resize(realSize);
@@ -150,13 +157,20 @@ void SparseMatrix<T>::getRandomMatrix(const size_t size, const uint16_t coeff) {
         std::sort(LJ.begin(), LJ.end());
         int rowCounter = 0;
         uint32_t i = 0;
-        for (uint32_t j = 0; j < realSize; ++j) {
+        for (uint32_t j = 0; j < realSize; ) {
+            if (j != 0 && (LJ[j] % size) == LJ[j - 1]) {
+                LJ.erase(LJ.begin() + i);
+                A.erase(A.begin() + i);
+                --realSize;
+                continue;
+            }
             if (LJ[j] / size > rowCounter) {
                 LI[i] = j;
                 ++i;
                 ++rowCounter;
             }
             LJ[j] = LJ[j] % size;
+            ++j;
         }
     }
 }

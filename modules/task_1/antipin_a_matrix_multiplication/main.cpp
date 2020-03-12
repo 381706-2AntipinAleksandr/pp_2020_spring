@@ -245,10 +245,8 @@ TEST(Matrix_multiplication, can_multiply_same_as_usial_matrix) {
     std::vector<double> mat_3;
     constructMatrix(mat1, &mat_1);
     constructMatrix(mat2, &mat_2);
-    
     getSequentialMatrixMultiplication(mat1, mat2, &mat3);
     matrixMultiplication(mat_1, 100, mat_2, &mat_3);
-
     EXPECT_EQ(mat3.getElem(10, 10), mat_3[10 * 100 + 10]);
     EXPECT_EQ(mat3.getElem(25, 40), mat_3[25 * 100 + 40]);
     EXPECT_EQ(mat3.getElem(56, 81), mat_3[56 * 100 + 81]);
