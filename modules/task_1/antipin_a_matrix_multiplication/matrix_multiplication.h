@@ -60,7 +60,7 @@ SparseMatrix<T>::SparseMatrix(const size_t size, const uint16_t coeff) {
         size_t colCounter = 0;
         uint32_t j = 0;
         for (uint32_t i = 0; i < realSize; ) {
-            if (i != 0 && LI[i] == LI[i - 1]) {
+            if (i != 0 && (LI[i] % size) == LI[i - 1]) {
                 LI.erase(LI.begin() + i);
                 A.erase(A.begin() + i);
                 --realSize;
@@ -71,9 +71,9 @@ SparseMatrix<T>::SparseMatrix(const size_t size, const uint16_t coeff) {
                 ++j;
                 ++colCounter;
             }
+            // printf("%ld  ", LI[i]);
             LI[i] = LI[i] % size;
             ++i;
-            printf("%ld  ", LI[i]);
         }
         LJ[j] = realSize;
     } else if (T == CRS) {
@@ -102,7 +102,7 @@ SparseMatrix<T>::SparseMatrix(const size_t size, const uint16_t coeff) {
         }
         LI[i] = realSize;
     }
-    printf("%ld\n", realSize);
+    // printf("%ld\n", realSize);
 }
 
 template <type T>

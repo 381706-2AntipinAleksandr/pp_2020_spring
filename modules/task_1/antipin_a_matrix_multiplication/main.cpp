@@ -46,9 +46,9 @@ TEST(Matrix_base, can_create_random_usial_matrix) {
     ASSERT_NO_THROW(getRandomMatrix(&A, 100));
 }
 
-//TEST(Matrix_base, can_create_matrix) {
-//    ASSERT_NO_THROW((SparseMatrix<CCS>(1000, 10)));
-//}
+TEST(Matrix_base, can_create_matrix) {
+    ASSERT_NO_THROW((SparseMatrix<CCS>(1000, 10)));
+}
 
 TEST(Matrix_base, can_throw_if_it_is_not_a_sparse_matrix) {
     ASSERT_ANY_THROW((SparseMatrix<CCS>(100, 5)));
@@ -188,7 +188,7 @@ TEST(Matrix_multiplication, can_multiply_matrices_correct) {
     EXPECT_EQ(res.getElem(4, 3), 12);
 }
 
-TEST(Matrix_multiplication, can_construct_usial_matrix_from_sparse){
+TEST(Matrix_multiplication, can_construct_usial_matrix_from_sparse) {
     std::vector<double> A1 = { 2.0, 5.0, 8.0, 1.0, 4.0, 9.0, 1.0, 1.0, 3.0 };
     std::vector<size_t> LI1 = { 0, 2, 5, 0, 5, 3, 2, 3, 5 };
     std::vector<size_t> LJ1 = { 0, 0, 3, 3, 5, 6, 9 };
@@ -199,7 +199,7 @@ TEST(Matrix_multiplication, can_construct_usial_matrix_from_sparse){
     ASSERT_NO_THROW(constructMatrix(mat1, &mat2));
 }
 
-TEST(Matrix_multiplication, can_construct_usial_matrix_from_sparse_correct_1){
+TEST(Matrix_multiplication, can_construct_usial_matrix_from_sparse_correct_1) {
     std::vector<double> A1 = { 2.0, 5.0, 8.0, 1.0, 4.0, 9.0, 1.0, 1.0, 3.0 };
     std::vector<size_t> LI1 = { 0, 2, 5, 0, 5, 3, 2, 3, 5 };
     std::vector<size_t> LJ1 = { 0, 0, 3, 3, 5, 6, 9 };
@@ -214,7 +214,7 @@ TEST(Matrix_multiplication, can_construct_usial_matrix_from_sparse_correct_1){
     EXPECT_EQ(8, mat2[5*6 + 1]);
 }
 
-TEST(Matrix_multiplication, can_construct_usial_matrix_from_sparse_correct_2){
+TEST(Matrix_multiplication, can_construct_usial_matrix_from_sparse_correct_2) {
     SparseMatrix<CCS> mat1(10, 8);
 
     std::vector<double> mat2;
@@ -234,6 +234,27 @@ TEST(Matrix_multiplication, can_construct_usial_matrix_from_sparse_correct_2){
 
     ASSERT_NO_THROW(getSequentialMatrixMultiplication(mat, mat1, &res));
 }*/
+
+TEST(Matrix_multiplication, can_multiply_same_as_usial_matrix) {
+    SparseMatrix<CCS> mat1(100, 8);
+    SparseMatrix<CCS> mat2(100, 9);
+    SparseMatrix<CCS> mat3;
+
+    std::vector<double> mat_1;
+    std::vector<double> mat_2;
+    std::vector<double> mat_3;
+    constructMatrix(mat1, &mat_1);
+    constructMatrix(mat2, &mat_2);
+    
+    getSequentialMatrixMultiplication(mat1, mat2, &mat3);
+    matrixMultiplication(mat_1, 100, mat_2, &mat_3);
+
+    EXPECT_EQ(mat3.getElem(10, 10), mat_3[10 * 100 + 10]);
+    EXPECT_EQ(mat3.getElem(25, 40), mat_3[25 * 100 + 40]);
+    EXPECT_EQ(mat3.getElem(56, 81), mat_3[56 * 100 + 81]);
+    EXPECT_EQ(mat3.getElem(73, 53), mat_3[73 * 100 + 53]);
+    EXPECT_EQ(mat3.getElem(94, 4), mat_3[94 * 100 + 4]);
+}
 
 int main(int argc, char** argv) {
     ::testing::InitGoogleTest(&argc, argv);

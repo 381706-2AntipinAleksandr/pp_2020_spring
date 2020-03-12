@@ -8,8 +8,8 @@
 void constructMatrix(const SparseMatrix<CCS>& A, std::vector<double>* B) {
     size_t n = A.getMatrixSize();
     (*B).resize(n*n);
-    for (size_t i = 0; i < n; ++i){
-        for (size_t j = 0; j < n; ++j){
+    for (size_t i = 0; i < n; ++i) {
+        for (size_t j = 0; j < n; ++j) {
             (*B)[i*n + j] = A.getElem(i, j);
         }
     }
