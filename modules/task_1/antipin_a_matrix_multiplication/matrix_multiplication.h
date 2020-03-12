@@ -59,13 +59,21 @@ SparseMatrix<T>::SparseMatrix(const size_t size, const uint16_t coeff) {
         std::sort(LI.begin(), LI.end());
         size_t colCounter = 0;
         uint32_t j = 0;
-        for (uint32_t i = 0; i < realSize; ++i) {
+        for (uint32_t i = 0; i < realSize; ) {
+            if (i != 0 && LI[i] == LI[i - 1]) {
+                LI.erase(LI.begin() + i);
+                A.erase(A.begin() + i);
+                --realSize;
+                continue;
+            }
             if (LI[i] / size >= colCounter) {
                 LJ[j] = i;
                 ++j;
                 ++colCounter;
             }
             LI[i] = LI[i] % size;
+            ++i;
+            printf("%ld  ", LI[i]);
         }
         LJ[j] = realSize;
     } else if (T == CRS) {
@@ -77,16 +85,24 @@ SparseMatrix<T>::SparseMatrix(const size_t size, const uint16_t coeff) {
         std::sort(LJ.begin(), LJ.end());
         size_t rowCounter = 0;
         uint32_t i = 0;
-        for (uint32_t j = 0; j < realSize; ++j) {
+        for (uint32_t j = 0; j < realSize; ) {
+            if (j != 0 && LJ[j] == LJ[j - 1]) {
+                LJ.erase(LJ.begin() + i);
+                A.erase(A.begin() + i);
+                --realSize;
+                continue;
+            }
             if (LJ[j] / size >= rowCounter) {
                 LI[i] = j;
                 ++i;
                 ++rowCounter;
             }
             LJ[j] = LJ[j] % size;
+            ++j;
         }
         LI[i] = realSize;
     }
+    printf("%ld\n", realSize);
 }
 
 template <type T>
@@ -177,8 +193,8 @@ void SparseMatrix<T>::setElem(const double elem, const size_t i, const size_t j)
 }
 
 template <type T>
-void SparseMatrix<T>::setMatrix(const std::vector<double>& A, const std::vector<size_t>&
-    LI, const std::vector<size_t>& LJ, const size_t n) {
+void SparseMatrix<T>::setMatrix(const std::vector<double>& A, const std::vector<size_t>& LI,
+    const std::vector<size_t>& LJ, const size_t n) {
     if (T == CCS) {
         if (LJ.size() > LI.size()) {
             throw("Wrong matrix type");
@@ -203,6 +219,8 @@ template <type T>
 size_t SparseMatrix<T>::getRealSize() const {
     return A.size();
 }
+
+void constructMatrix(const SparseMatrix<CCS>& A, std::vector<double>* B);
 
 void matrixMultiplication(const std::vector<double>& A, const size_t n, const std::vector<double>& B,
     std::vector<double>* C);

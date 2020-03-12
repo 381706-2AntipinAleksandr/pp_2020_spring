@@ -46,9 +46,9 @@ TEST(Matrix_base, can_create_random_usial_matrix) {
     ASSERT_NO_THROW(getRandomMatrix(&A, 100));
 }
 
-TEST(Matrix_base, can_create_matrix) {
-    ASSERT_NO_THROW((SparseMatrix<CCS>(1000, 10)));
-}
+//TEST(Matrix_base, can_create_matrix) {
+//    ASSERT_NO_THROW((SparseMatrix<CCS>(1000, 10)));
+//}
 
 TEST(Matrix_base, can_throw_if_it_is_not_a_sparse_matrix) {
     ASSERT_ANY_THROW((SparseMatrix<CCS>(100, 5)));
@@ -186,6 +186,43 @@ TEST(Matrix_multiplication, can_multiply_matrices_correct) {
 
     EXPECT_EQ(res.getElem(3, 1), 8);
     EXPECT_EQ(res.getElem(4, 3), 12);
+}
+
+TEST(Matrix_multiplication, can_construct_usial_matrix_from_sparse){
+    std::vector<double> A1 = { 2.0, 5.0, 8.0, 1.0, 4.0, 9.0, 1.0, 1.0, 3.0 };
+    std::vector<size_t> LI1 = { 0, 2, 5, 0, 5, 3, 2, 3, 5 };
+    std::vector<size_t> LJ1 = { 0, 0, 3, 3, 5, 6, 9 };
+    SparseMatrix<CCS> mat1;
+    mat1.setMatrix(A1, LI1, LJ1, 6);
+
+    std::vector<double> mat2;
+    ASSERT_NO_THROW(constructMatrix(mat1, &mat2));
+}
+
+TEST(Matrix_multiplication, can_construct_usial_matrix_from_sparse_correct_1){
+    std::vector<double> A1 = { 2.0, 5.0, 8.0, 1.0, 4.0, 9.0, 1.0, 1.0, 3.0 };
+    std::vector<size_t> LI1 = { 0, 2, 5, 0, 5, 3, 2, 3, 5 };
+    std::vector<size_t> LJ1 = { 0, 0, 3, 3, 5, 6, 9 };
+    SparseMatrix<CCS> mat1;
+    mat1.setMatrix(A1, LI1, LJ1, 6);
+
+    std::vector<double> mat2;
+    constructMatrix(mat1, &mat2);
+
+    EXPECT_EQ(0, mat2[2*6 + 0]);
+    EXPECT_EQ(9, mat2[3*6 + 4]);
+    EXPECT_EQ(8, mat2[5*6 + 1]);
+}
+
+TEST(Matrix_multiplication, can_construct_usial_matrix_from_sparse_correct_2){
+    SparseMatrix<CCS> mat1(10, 8);
+
+    std::vector<double> mat2;
+    constructMatrix(mat1, &mat2);
+
+    EXPECT_EQ(mat1.getElem(1, 3), mat2[1*10 + 3]);
+    EXPECT_EQ(mat1.getElem(5, 5), mat2[5*10 + 5]);
+    EXPECT_EQ(mat1.getElem(8, 6), mat2[8*10 + 6]);
 }
 
 /*TEST(Matrix_multiplication, can_multiply_random_matrices) {

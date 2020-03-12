@@ -5,6 +5,16 @@
 #include <algorithm>
 #include "../../../modules/task_1/antipin_a_matrix_multiplication/matrix_multiplication.h"
 
+void constructMatrix(const SparseMatrix<CCS>& A, std::vector<double>* B) {
+    size_t n = A.getMatrixSize();
+    (*B).resize(n*n);
+    for (size_t i = 0; i < n; ++i){
+        for (size_t j = 0; j < n; ++j){
+            (*B)[i*n + j] = A.getElem(i, j);
+        }
+    }
+}
+
 void matrixMultiplication(const std::vector<double>& A, const size_t n, const std::vector<double>& B,
     std::vector<double>* C) {
     if (A.size() != B.size()) {
