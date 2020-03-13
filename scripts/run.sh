@@ -6,7 +6,7 @@ for file in $FILES_SEQ; do
         echo "--------------------------------"
         echo $(basename $file)
         echo "--------------------------------"
-        ./$file --gtest_repeat=10
+        ./$file --gtest_repeat=1000
     end_seq=`date +%s`
     runtime=$((end_seq-start_seq))
     if [ "$runtime" -gt "5" ]
