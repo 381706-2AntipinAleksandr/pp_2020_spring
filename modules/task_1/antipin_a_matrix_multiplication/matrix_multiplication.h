@@ -183,7 +183,7 @@ void SparseMatrix<T>::getRandomMatrix(const size_t size, const uint16_t coeff) {
 template <type T>
 double SparseMatrix<T>::getElem(const size_t i, const size_t j) const {
     size_t count = T == CCS ? LJ.size() - 1 : LI.size() - 1;
-    if (i < 0 || j < 0 || i > count || j > count) {
+    if (i > count || j > count) {
         throw("Wrong index of element");
     }
     double res = 0.0;
