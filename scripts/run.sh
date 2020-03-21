@@ -9,7 +9,7 @@ for file in $FILES_SEQ; do
         ./$file --gtest_repeat=200
     end_seq=`date +%s`
     runtime=$((end_seq-start_seq))
-    if [ "$runtime" -gt "5" ]
+    if [ "$runtime" -gt "60" ]
     then
         echo "Alert: runtime > 5 sec. runtime = $runtime sec."
         exit 1
@@ -26,7 +26,7 @@ for file in $FILES_OMP; do
         ./$file --gtest_repeat=10
     end_omp=`date +%s`
     runtime=$((end_omp-start_omp))
-    if [ "$runtime" -gt "5" ]
+    if [ "$runtime" -gt "60" ]
     then
         echo "Alert: runtime > 5 sec. runtime = $runtime sec."
         exit 1
