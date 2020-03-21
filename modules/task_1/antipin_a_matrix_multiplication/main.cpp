@@ -216,13 +216,13 @@ TEST(Matrix_multiplication, can_construct_usial_matrix_from_sparse_correct_1) {
 
 TEST(Matrix_multiplication, can_construct_usial_matrix_from_sparse_correct_2) {
     SparseMatrix<CCS> mat1(10, 8);
-
+    mat1.printM();
     std::vector<double> mat2;
     constructMatrix(mat1, &mat2);
 
     EXPECT_NEAR(mat1.getElem(1, 3), mat2[1*10 + 3], 0.000001);
     EXPECT_NEAR(mat1.getElem(5, 5), mat2[5*10 + 5], 0.000001);
-    EXPECT_NEAR(mat1.getElem(8, 6), mat2[8*10 + 6], 0.000001);
+    EXPECT_NEAR(mat1.getElem(9, 6), mat2[9*10 + 6], 0.000001);
 }
 
 /*TEST(Matrix_multiplication, can_multiply_random_matrices) {

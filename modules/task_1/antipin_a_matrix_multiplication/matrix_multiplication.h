@@ -24,6 +24,7 @@ class SparseMatrix {
         const size_t n);
     size_t getMatrixSize() const;
     size_t getRealSize() const;
+    void printM() const;
 
     friend void convertMatrix(const SparseMatrix<CCS>& A, SparseMatrix<CRS>* B);
     friend void convertMatrix(const SparseMatrix<CRS>& A, SparseMatrix<CCS>* B);
@@ -75,7 +76,10 @@ SparseMatrix<T>::SparseMatrix(const size_t size, const uint16_t coeff) {
             LI[i] = LI[i] % size;
             ++i;
         }
-        LJ[j] = realSize;
+        while (j != LJ.size()) {
+            LJ[j] = realSize;
+            ++j;
+        }
     } else if (T == CRS) {
         LJ.resize(realSize);
         LI.resize(size + 1);
@@ -100,7 +104,10 @@ SparseMatrix<T>::SparseMatrix(const size_t size, const uint16_t coeff) {
             LJ[j] = LJ[j] % size;
             ++j;
         }
-        LI[i] = realSize;
+        while (i != LI.size()) {
+            LI[i] = realSize;
+            ++i;
+        }
     }
     // printf("%ld\n", realSize);
 }
@@ -232,6 +239,16 @@ size_t SparseMatrix<T>::getMatrixSize() const {
 template <type T>
 size_t SparseMatrix<T>::getRealSize() const {
     return A.size();
+}
+
+template<type T>
+void SparseMatrix<T>::printM() const {
+    for (size_t i = 0; i < A.size(); ++i) {
+        printf("A[%ld] = %f, LI[%ld] = %ld\n", i, A[i], i, LI[i]);
+    }
+    for (size_t i = 0; i < LJ.size(); ++i) {
+        printf("LJ[%ld] = %ld\n", i, LJ[i]);
+    }
 }
 
 void constructMatrix(const SparseMatrix<CCS>& A, std::vector<double>* B);
