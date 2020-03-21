@@ -72,11 +72,13 @@ SparseMatrix<T>::SparseMatrix(const size_t size, const uint16_t coeff) {
                 ++j;
                 ++colCounter;
             }
-            // printf("%ld  ", LI[i]);
             LI[i] = LI[i] % size;
             ++i;
         }
-        LJ[j] = realSize;
+        while (j != LJ.size()) {
+            LJ[j] = realSize;
+            ++j;
+        }
     } else if (T == CRS) {
         LJ.resize(realSize);
         LI.resize(size + 1);
@@ -101,9 +103,12 @@ SparseMatrix<T>::SparseMatrix(const size_t size, const uint16_t coeff) {
             LJ[j] = LJ[j] % size;
             ++j;
         }
-        LI[i] = realSize;
+        while (i != LI.size()) {
+            LI[i] = realSize;
+            ++i;
+        }
+        
     }
-    // printf("%ld\n", realSize);
 }
 
 template <type T>
@@ -178,7 +183,8 @@ void SparseMatrix<T>::getRandomMatrix(const size_t size, const uint16_t coeff) {
 
 template <type T>
 double SparseMatrix<T>::getElem(const size_t i, const size_t j) const {
-    if (i < 0 || j < 0 || i > A.size() || j > A.size()) {
+    size_t count = T == CCS ? LJ.size() - 1 : LI.size() - 1;
+    if (i < 0 || j < 0 || i > count || j > count) {
         throw("Wrong index of element");
     }
     double res = 0.0;
@@ -210,14 +216,9 @@ void SparseMatrix<T>::setElem(const double elem, const size_t i, const size_t j)
 template <type T>
 void SparseMatrix<T>::setMatrix(const std::vector<double>& A, const std::vector<size_t>& LI,
     const std::vector<size_t>& LJ, const size_t n) {
-    if (T == CCS) {
-        if (LJ.size() > LI.size()) {
-            throw("Wrong matrix type");
-        }
-    } else {
-        if (LI.size() > LJ.size()) {
-            throw("Wrong matrix type");
-        }
+    size_t count = T == CCS ? LI.size() : LJ.size();
+    if (A.size() != count) {
+        throw("Wrong vectors size");
     }
     this->n = n;
     this->A = A;
