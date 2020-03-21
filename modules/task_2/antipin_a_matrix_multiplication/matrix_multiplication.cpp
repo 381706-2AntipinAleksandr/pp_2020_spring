@@ -126,7 +126,7 @@ void getParallelOMPMatrixMultiplication(const SparseMatrix<CCS>& A, const Sparse
         size_t lj = omp_get_thread_num();
         iterator = omp_get_thread_num() * tmp.getMatrixSize();
 #pragma omp for schedule(static, size)
-        for (int n = 0; n < int(tmp.getMatrixSize()); ++n) {
+        for (int n = 0; n < static_cast<int>(tmp.getMatrixSize()); ++n) {
             size_t li = 0;
             for (size_t i = 0; i < tmp.getMatrixSize(); ++i) {
                 double elem = 0.0;
@@ -135,8 +135,7 @@ void getParallelOMPMatrixMultiplication(const SparseMatrix<CCS>& A, const Sparse
                     for (size_t j = B.LJ[lj]; j < B.LJ[lj + 1]; ++j) {
                         elem += isZero(tmp.getElem(i, B.LI[j]) * B.A[j]);
                     }
-                }
-                else {
+                } else {
                     for (size_t j = tmp.LI[i]; j < tmp.LI[i + 1]; ++j) {
                         elem += isZero(tmp.A[j] * B.getElem(tmp.LJ[j], size_t(n)));
                     }

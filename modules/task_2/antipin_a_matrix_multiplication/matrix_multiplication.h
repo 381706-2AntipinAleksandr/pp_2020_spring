@@ -1,6 +1,6 @@
 // Copyright 2020 Antipin Alexander
-#ifndef MODULES_TASK_1_ANTIPIN_A_MATRIX_MULTIPLICATION_MATRIX_MULTIPLICATION_H_
-#define MODULES_TASK_1_ANTIPIN_A_MATRIX_MULTIPLICATION_MATRIX_MULTIPLICATION_H_
+#ifndef MODULES_TASK_2_ANTIPIN_A_MATRIX_MULTIPLICATION_MATRIX_MULTIPLICATION_H_
+#define MODULES_TASK_2_ANTIPIN_A_MATRIX_MULTIPLICATION_MATRIX_MULTIPLICATION_H_
 
 #include <omp.h>
 #include <vector>
@@ -251,4 +251,4 @@ void convertMatrix(const SparseMatrix<CRS>& A, SparseMatrix<CCS>* B);
 void getParallelOMPMatrixMultiplication(const SparseMatrix<CCS>& A, const SparseMatrix<CCS>& B, SparseMatrix<CCS>* C,
     const int numThreads = omp_get_max_threads());
 
-#endif  // MODULES_TASK_1_ANTIPIN_A_MATRIX_MULTIPLICATION_MATRIX_MULTIPLICATION_H_
+#endif  // MODULES_TASK_2_ANTIPIN_A_MATRIX_MULTIPLICATION_MATRIX_MULTIPLICATION_H_

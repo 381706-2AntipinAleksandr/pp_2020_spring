@@ -6,7 +6,7 @@ for /r "." %%a in (build\bin\*_seq.exe) do (
     echo %%~na
     echo -------------------------------------
     set start=!time!
-    %%~fa --gtest_repeat=10
+    %%~fa --gtest_repeat=200
     set end=!time!
 
     set options="tokens=1-4 delims=:.,"
