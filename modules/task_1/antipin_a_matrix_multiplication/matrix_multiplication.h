@@ -107,7 +107,6 @@ SparseMatrix<T>::SparseMatrix(const size_t size, const uint16_t coeff) {
             LI[i] = realSize;
             ++i;
         }
-        
     }
 }
 
