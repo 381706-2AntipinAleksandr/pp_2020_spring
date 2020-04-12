@@ -6,7 +6,7 @@ for file in $FILES_SEQ; do
         echo "--------------------------------"
         echo $(basename $file)
         echo "--------------------------------"
-        ./$file --gtest_repeat=1000
+        ./$file --gtest_repeat=10
     end_seq=`date +%s`
     runtime=$((end_seq-start_seq))
     if [ "$runtime" -gt "5" ]
@@ -23,7 +23,7 @@ for file in $FILES_OMP; do
         echo "--------------------------------"
         echo $(basename $file)
         echo "--------------------------------"
-        ./$file --gtest_repeat=10
+        ./$file --gtest_repeat=150
     end_omp=`date +%s`
     runtime=$((end_omp-start_omp))
     if [ "$runtime" -gt "5" ]
