@@ -26,11 +26,6 @@ for file in $FILES_OMP; do
         ./$file --gtest_repeat=150
     end_omp=`date +%s`
     runtime=$((end_omp-start_omp))
-    if [ "$runtime" -gt "5" ]
-    then
-        echo "Alert: runtime > 5 sec. runtime = $runtime sec."
-        exit 1
-    fi
 done
 
 
