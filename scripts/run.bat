@@ -104,11 +104,6 @@ for /r "." %%a in (build\bin\*_tbb.exe) do (
     if !hours! lss 0 set /a hours = 24!hours!
     if 1!ms! lss 100 set ms=0!ms!
     set /a totalsecs = !hours!*3600 + !mins!*60 + !secs!
-    if !totalsecs! gtr 5 (
-        echo Alert: runtime greater then 5 sec.
-        echo runtime = !totalsecs! sec.
-        exit /b 1
-    )
 )
 
 for /r "." %%a in (build\bin\*_std.exe) do (
