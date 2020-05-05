@@ -41,7 +41,7 @@ for /r "." %%a in (build\bin\*_omp.exe) do (
     echo %%~na
     echo -------------------------------------
     set start=!time!
-    %%~fa --gtest_repeat=150
+    %%~fa --gtest_repeat=10
     set end=!time!
 
     set options="tokens=1-4 delims=:.,"
@@ -76,7 +76,7 @@ for /r "." %%a in (build\bin\*_tbb.exe) do (
     echo %%~na
     echo -------------------------------------
     set start=!time!
-    %%~fa --gtest_repeat=10
+    %%~fa --gtest_repeat=150
     set end=!time!
 
     set options="tokens=1-4 delims=:.,"

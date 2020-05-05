@@ -23,7 +23,7 @@ for file in $FILES_OMP; do
         echo "--------------------------------"
         echo $(basename $file)
         echo "--------------------------------"
-        ./$file --gtest_repeat=150
+        ./$file --gtest_repeat=10
     end_omp=`date +%s`
     runtime=$((end_omp-start_omp))
 done
@@ -35,14 +35,9 @@ for file in $FILES_TBB; do
         echo "--------------------------------"
         echo $(basename $file)
         echo "--------------------------------"
-        ./$file --gtest_repeat=10
+        ./$file --gtest_repeat=150
     end_tbb=`date +%s`
     runtime=$((end_tbb-start_tbb))
-    if [ "$runtime" -gt "5" ]
-    then
-        echo "Alert: runtime > 5 sec. runtime = $runtime sec."
-        exit 1
-    fi
 done
 
 
