@@ -35,7 +35,7 @@ for file in $FILES_TBB; do
         echo "--------------------------------"
         echo $(basename $file)
         echo "--------------------------------"
-        ./$file --gtest_repeat=150
+        ./$file --gtest_repeat=10
     end_tbb=`date +%s`
     runtime=$((end_tbb-start_tbb))
 done
@@ -47,14 +47,9 @@ for file in $FILES_STD; do
         echo "--------------------------------"
         echo $(basename $file)
         echo "--------------------------------"
-        ./$file --gtest_repeat=10
+        ./$file --gtest_repeat=150
     end_std=`date +%s`
     runtime=$((end_std-start_std))
-    if [ "$runtime" -gt "5" ]
-    then
-        echo "Alert: runtime > 5 sec. runtime = $runtime sec."
-        exit 1
-    fi
 done
 
 FILES_MPI="build/bin/*_mpi"
